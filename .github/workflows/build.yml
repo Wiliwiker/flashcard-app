@@ -37,7 +37,16 @@ jobs:
     - name: Build with Buildozer
       run: |
         buildozer -v android debug 2>&1 | tee build.log
-      continue-on-error: true
+    
+    - name: Check for errors
+      if: always()
+      run: |
+        echo "=== Checking build directory ==="
+        ls -la
+        echo "=== Checking bin directory ==="
+        ls -la bin/ || echo "No bin directory"
+        echo "=== Finding APK files ==="
+        find . -name "*.apk" -type f
     
     - name: Upload build log
       if: always()
@@ -45,6 +54,15 @@ jobs:
       with:
         name: build-log
         path: build.log
+
+    - name: Upload APK
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: flashcard-app
+        path: |
+          bin/*.apk
+          **/*.apk
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
