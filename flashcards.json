@@ -1,0 +1,9 @@
+{
+    "decks": [
+        {
+            "name": "Mes Cartes",
+            "cards": []
+        }
+    ],
+    "current_deck_index": 0
+}
