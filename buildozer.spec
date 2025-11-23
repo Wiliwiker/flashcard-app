@@ -79,3 +79,14 @@ log_level = 2
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1
+
+
+
+
+
+# (str) Icon of the application
+icon.filename = %(source.dir)s/icon_simple.png
+
+# (str) Adaptive icon of the application (used if Android API level is 26+ at runtime)
+icon.adaptive_foreground.filename = %(source.dir)s/adaptive_icon_fg.png
+icon.adaptive_background.filename = %(source.dir)s/adaptive_icon_bg.png

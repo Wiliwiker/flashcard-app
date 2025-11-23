@@ -1,0 +1,14 @@
+{
+    "decks": [
+        {
+            "name": "Mes Cartes",
+            "cards": [
+                {
+                    "question": "aze",
+                    "answer": "aze"
+                }
+            ]
+        }
+    ],
+    "current_deck_index": 0
+}
