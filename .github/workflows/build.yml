@@ -14,7 +14,6 @@ jobs:
     env:
       ANDROID_HOME: "${{ github.workspace }}/android-sdk"
       ANDROID_SDK_ROOT: "${{ github.workspace }}/android-sdk"
-      PATH: "${{ github.workspace }}/android-sdk/cmdline-tools/latest/bin:${{ github.workspace }}/android-sdk/platform-tools:${{ github.workspace }}/.local/bin:$PATH"
 
     steps:
     - name: Checkout repo
@@ -62,17 +61,16 @@ jobs:
 
     - name: Build with Buildozer
       run: |
+        export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
         buildozer -v android debug 2>&1 | tee build.log
 
     - name: Extract APKs to bin/
       if: success()
       run: |
-        # enable recursive globbing
         shopt -s globstar nullglob
         mkdir -p bin
         cnt=0
         for f in ./**/**/*.apk ./**/*.apk ./*.apk; do
-          # skip if loop sees directory names (shouldn't)
           if [ -f "$f" ]; then
             cp -v "$f" bin/
             cnt=$((cnt+1))
