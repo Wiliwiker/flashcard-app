@@ -31,7 +31,17 @@ version = 0.1
 # icon.filename = %(source.dir)s/icon.png
 
 # (list) List of application requirements
-requirements = python3,kivy==2.3.0,android
+requirements = python3,
+    kivy,
+    https://github.com/kivymd/KivyMD/archive/master.zip,
+    materialyoucolor,
+    materialshapes,
+    pycairo,
+    pillow,
+    exceptiongroup,
+    asyncgui,
+    asynckivy,
+    android
 
 # (str) Supported orientation (landscape, portrait or all)
 orientation = portrait
@@ -43,13 +53,16 @@ fullscreen = 0
 android.permissions = INTERNET
 
 # (int) Target Android API, should be as high as possible.
-android.api = 31
+android.api = 34
 
-# (int) Minimum API your APK will support.
+# (int) Minimum API your APK / AAB will support.
 android.minapi = 21
 
+# (int) Android SDK version to use
+android.sdk = 34
+
 # (str) Android NDK version to use
-android.ndk = 23b
+android.ndk = 25b
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 android.private_storage = True
