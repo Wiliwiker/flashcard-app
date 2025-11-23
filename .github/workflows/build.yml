@@ -12,25 +12,19 @@ jobs:
     runs-on: ubuntu-22.04
 
     env:
-      ANDROID_HOME: ${{ github.workspace }}/android-sdk
-      ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
-      PATH: ${{ github.workspace }}/android-sdk/cmdline-tools/latest/bin:${{ github.workspace }}/android-sdk/platform-tools:${{ github.workspace }}/.local/bin:$PATH
+      ANDROID_HOME: "${{ github.workspace }}/android-sdk"
+      ANDROID_SDK_ROOT: "${{ github.workspace }}/android-sdk"
+      PATH: "${{ github.workspace }}/android-sdk/cmdline-tools/latest/bin:${{ github.workspace }}/android-sdk/platform-tools:${{ github.workspace }}/.local/bin:$PATH"
 
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
 
-    # -----------------------------
-    # Python
-    # -----------------------------
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
 
-    # -----------------------------
-    # Dependencies
-    # -----------------------------
     - name: Install system dependencies
       run: |
         sudo apt update
@@ -44,47 +38,32 @@ jobs:
         pip install cython==0.29.33 buildozer
         pip install --upgrade python-for-android
 
-    # -----------------------------
-    # Android SDK
-    # -----------------------------
     - name: Install Android SDK
       run: |
-        mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
-        cd $ANDROID_SDK_ROOT
+        mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
+        cd "$ANDROID_SDK_ROOT"
 
-        # Download command-line tools
         wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O sdk.zip
         unzip sdk.zip -d cmdline-tools
         mv cmdline-tools/cmdline-tools cmdline-tools/latest
 
-        # Accept licenses
         yes | cmdline-tools/latest/bin/sdkmanager --licenses
 
-        # Install required packages
         yes | cmdline-tools/latest/bin/sdkmanager \
             "platform-tools" \
             "platforms;android-31" \
             "build-tools;31.0.0"
 
-    # -----------------------------
-    # Cache Buildozer
-    # -----------------------------
     - name: Cache Buildozer
       uses: actions/cache@v3
       with:
         path: .buildozer
         key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
 
-    # -----------------------------
-    # Build APK
-    # -----------------------------
     - name: Build with Buildozer
       run: |
         buildozer -v android debug 2>&1 | tee build.log
 
-    # -----------------------------
-    # Find APK output
-    # -----------------------------
     - name: Extract APK
       if: success()
       run: |
@@ -101,18 +80,12 @@ for root, dirs, files in os.walk("."):
 EOF
         ls -la bin/
 
-    # -----------------------------
-    # Upload logs
-    # -----------------------------
     - name: Upload build log
       uses: actions/upload-artifact@v4
       with:
         name: build-log
         path: build.log
 
-    # -----------------------------
-    # Upload APK
-    # -----------------------------
     - name: Upload APK
       if: success()
       uses: actions/upload-artifact@v4
