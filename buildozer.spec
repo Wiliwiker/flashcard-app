@@ -1,3 +1,4 @@
+
 [app]
 
 # (str) Title of your application
@@ -15,11 +16,12 @@ source.dir = .
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas,json,ttf
 
-# (list) List of inclusions using pattern matching
+
 source.include_patterns = images/*.png
 
+
 # (str) Application versioning (method 1)
-version = 0.2
+version = 0.1
 
 # (list) List of application requirements
 requirements = python3,
@@ -74,27 +76,6 @@ android.skip_update = False
 # (bool) If True, then automatically accept SDK license
 android.accept_sdk_license = True
 
-#
-# ICÔNES ET PRESPLASH - CONFIGURATION MISE À JOUR
-#
-
-# (str) Icon of the application
-# Icône standard pour Android < 8.0
-icon.filename = %(source.dir)s/images/icon.png
-
-# (str) Adaptive icon of the application (used if Android API level is 26+ at runtime)
-# Icône adaptive pour Android 8.0+
-icon.adaptive_foreground.filename = %(source.dir)s/images/adaptive_icon_fg.png
-icon.adaptive_background.filename = %(source.dir)s/images/adaptive_icon_bg.png
-
-# (str) Presplash of the application
-# Écran de démarrage affiché au lancement
-presplash.filename = %(source.dir)s/images/presplash.png
-
-# (str) Presplash background color (for new android toolchain)
-# Couleur de fond du presplash si l'image ne charge pas
-android.presplash_color = #4A6572
-
 [buildozer]
 
 # (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
@@ -102,3 +83,18 @@ log_level = 2
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1
+
+
+
+
+
+# (str) Icon of the application
+icon.filename = %(source.dir)s/images/icon.png
+
+# (str) Adaptive icon of the application (used if Android API level is 26+ at runtime)
+icon.adaptive_foreground.filename = %(source.dir)s/images/adaptive_icon_fg.png
+icon.adaptive_background.filename = %(source.dir)s/images/adaptive_icon_bg.png
+
+
+# (str) Presplash
+presplash.filename = %(source.dir)s/images/icon.png
