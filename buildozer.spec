@@ -60,7 +60,7 @@ android.logcat_filters = *:S python:D
 
 # (list) List of Android archs to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
 # For CI builds, stick to one architecture to save time and memory
-android.arch = armeabi-v7a
+android.arch = arm64-v8a
 
 # (bool) Enable Android X (Android Jetpack) support
 android.enable_androidx = True
@@ -85,8 +85,12 @@ warn_on_root = 1
 
 
 # (str) Icon of the application
-icon.filename = %(source.dir)s/icon_simple.png
+icon.filename = %(source.dir)s/icon.png
 
 # (str) Adaptive icon of the application (used if Android API level is 26+ at runtime)
 icon.adaptive_foreground.filename = %(source.dir)s/adaptive_icon_fg.png
 icon.adaptive_background.filename = %(source.dir)s/adaptive_icon_bg.png
+
+
+# (str) Presplash
+presplash.filename = %(source.dir)s/icon.png

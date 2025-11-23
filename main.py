@@ -125,7 +125,7 @@ class DeckWidget(BoxLayout):
         super().__init__(**kwargs)
         self.orientation = 'horizontal'
         self.size_hint_y = None
-        self.height = dp(100)
+        self.height = dp(140)  # Augmenté pour accommoder les boutons en colonne
         self.padding = [dp(10), dp(10)]
         self.spacing = dp(10)
         
@@ -167,18 +167,27 @@ class DeckWidget(BoxLayout):
         
         self.add_widget(content_layout)
         
-        # Buttons
-        button_layout = BoxLayout(orientation='horizontal', size_hint_x=0.4, spacing=dp(5))
+        # Buttons en COLONNE comme dans la gestion des cartes
+        button_layout = BoxLayout(orientation='vertical', size_hint_x=0.4, spacing=dp(5))
         
-        select_btn = PrimaryButton(text='Ouvrir')
+        select_btn = PrimaryButton(
+            text='Ouvrir',
+            size_hint_y=0.33
+        )
         select_btn.bind(on_press=lambda x: select_callback(index))
         button_layout.add_widget(select_btn)
         
-        edit_btn = SuccessButton(text='Modifier')
+        edit_btn = SuccessButton(
+            text='Modifier', 
+            size_hint_y=0.33
+        )
         edit_btn.bind(on_press=lambda x: edit_callback(index))
         button_layout.add_widget(edit_btn)
         
-        delete_btn = DangerButton(text='×')
+        delete_btn = DangerButton(
+            text='Supprimer',
+            size_hint_y=0.33
+        )
         delete_btn.bind(on_press=lambda x: delete_callback(index))
         button_layout.add_widget(delete_btn)
         
@@ -189,7 +198,6 @@ class DeckWidget(BoxLayout):
         self.rect.size = self.size
         self.border.size = (self.size[0]-2, self.size[1]-2)
         self.border.pos = (self.pos[0]+1, self.pos[1]+1)
-
 
 class CardWidget(BoxLayout):
     def __init__(self, card, index, edit_callback, delete_callback, **kwargs):
