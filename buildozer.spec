@@ -15,20 +15,9 @@ source.dir = .
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas,json,ttf
 
-# (list) Source files to exclude (let empty to not exclude anything)
-# source.exclude_exts = spec
-
-# (list) List of directory to exclude (let empty to not exclude)
-# source.exclude_dirs = tests, bin, venv
 
 # (str) Application versioning (method 1)
 version = 0.1
-
-# (str) Presplash of the application
-# presplash.filename = %(source.dir)s/presplash.png
-
-# (str) Icon of the application
-# icon.filename = %(source.dir)s/icon.png
 
 # (list) List of application requirements
 requirements = python3,
@@ -84,24 +73,6 @@ android.skip_update = False
 # (bool) If True, then automatically accept SDK license
 android.accept_sdk_license = True
 
-# (int) Android SDK version to use
-android.sdk = 21
-
-# (str) Android NDK directory (if empty, it will be automatically downloaded.)
-# android.ndk_path =
-
-# (str) Android SDK directory (if empty, it will be automatically downloaded.)
-# android.sdk_path =
-
-# (str) Python-for-Android p4a source to use
-# p4a.source =
-
-# (str) Python-for-Android branch to use
-# p4a.branch = master
-
-# (str) OSX SDK version to use
-# osx.sdk_version =
-
 [buildozer]
 
 # (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
@@ -109,12 +80,3 @@ log_level = 2
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1
-
-# (str) Path to build artifact storage, absolute or relative to spec file
-# build_dir = .buildozer
-
-# (str) Path to build output (i.e. .apk, .aab files) storage
-# bin_dir = bin
-
-# (str) Buildozer cache directory for dependencies
-# buildozer.cache_dir = .buildozer/cache
