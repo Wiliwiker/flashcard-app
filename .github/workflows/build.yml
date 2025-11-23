@@ -9,10 +9,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    
+    # Add swap file to prevent memory issues
+    strategy:
+      fail-fast: false
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Setup swap space (prevent OOM)
+      uses: pierotofy/setup-swap@v1
+      with:
+        swap-size-gb: 4
 
     - name: Set up Python 3.9
       uses: actions/setup-python@v4
@@ -22,9 +31,9 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        # Install libtinfo5 from an older Ubuntu release to resolve the missing package error
-        wget http://security.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
-        sudo apt install ./libtinfo5_6.3-2ubuntu0.1_amd64.deb
+        # Install libtinfo5 from older Ubuntu release
+        wget -q http://security.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
+        sudo apt install -y ./libtinfo5_6.3-2ubuntu0.1_amd64.deb
         # Install other required packages
         sudo apt-get install -y \
           git \
@@ -40,27 +49,71 @@ jobs:
           cmake \
           libffi-dev \
           libssl-dev \
-          ninja-build
+          ninja-build \
+          curl \
+          unzip \
+          python3-venv
 
     - name: Upgrade Cython and pip
       run: |
         pip install --upgrade pip setuptools wheel
-        pip install --upgrade cython
+        pip install --upgrade cython==0.29.33
 
-    - name: Install Buildozer
+    - name: Install Buildozer and dependencies
       run: |
         pip install buildozer
+        pip install kivy==2.3.0
+        pip install virtualenv
 
-    - name: Build APK with Buildozer (Debug)
+    - name: Cache Buildozer dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.buildozer
+          .buildozer
+        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+        restore-keys: |
+          ${{ runner.os }}-buildozer-
+
+    - name: Initialize Buildozer (if needed)
       run: |
-        buildozer -v android debug
+        if [ ! -f "buildozer.spec" ]; then
+          buildozer init
+        fi
+
+    - name: Build APK with Buildozer (with retry)
+      run: |
+        set +e
+        for i in {1..3}; do
+          echo "Build attempt $i"
+          buildozer -v android clean
+          if buildozer -v android debug; then
+            echo "Build successful on attempt $i"
+            break
+          else
+            echo "Build attempt $i failed"
+            if [ $i -eq 3 ]; then
+              exit 1
+            fi
+            sleep 10
+          fi
+        done
       env:
-        # Set buildozer to use a temporary directory in the workspace to avoid permission issues
+        # Set Buildozer to use workspace directory
         BUILDOLDER_ROOT: ${{ github.workspace }}/.buildozer
+        # Increase memory for Java builds
+        GRADLE_OPTS: "-Xmx2048m -XX:MaxPermSize=512m"
+        # Set Android home explicitly
+        ANDROID_HOME: /usr/local/lib/android/sdk
+
+    - name: List build outputs
+      run: ls -la bin/ || echo "No bin directory found"
 
     - name: Upload APK artifact
+      if: success()
       uses: actions/upload-artifact@v4
       with:
         name: flashcard-app-apk
         path: bin/*.apk
         retention-days: 7
+        if-no-files-found: warn
