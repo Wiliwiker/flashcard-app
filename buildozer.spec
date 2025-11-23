@@ -36,7 +36,7 @@ fullscreen = 0
 #presplash.filename = %(source.dir)s/presplash.png
 
 # Android architecture
-android.archs = arm64-v8a, armeabi-v7a
+android.archs = armeabi-v7a
 
 # App metadata
 android.meta_data = com.samsung.android.sdk.multiwindow.enable=true
@@ -49,7 +49,7 @@ build_dir = ./.buildozer
 # Binary directory  
 bin_dir = ./bin
 
-# Log level
+# Log level (2 = full debug output)
 log_level = 2
 
 # Display warning if buildozer is run as root
