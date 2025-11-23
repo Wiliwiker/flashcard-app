@@ -1,4 +1,4 @@
-name: Build Kivy Android APK
+name: Build Android APK with Buildozer
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout code
@@ -22,19 +22,21 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
+        # Install libtinfo5 from an older Ubuntu release to resolve the missing package error
+        wget http://security.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
+        sudo apt install ./libtinfo5_6.3-2ubuntu0.1_amd64.deb
+        # Install other required packages
         sudo apt-get install -y \
           git \
           zip \
           unzip \
           openjdk-11-jdk \
-          python3-pip \
           autoconf \
           libtool \
           pkg-config \
           zlib1g-dev \
           libncurses5-dev \
           libncursesw5-dev \
-          libtinfo5 \
           cmake \
           libffi-dev \
           libssl-dev \
@@ -45,11 +47,9 @@ jobs:
         pip install --upgrade pip setuptools wheel
         pip install --upgrade cython
 
-    - name: Install Buildozer and Kivy dependencies
+    - name: Install Buildozer
       run: |
         pip install buildozer
-        pip install kivy
-        pip install kivymd
 
     - name: Build APK with Buildozer (Debug)
       run: |
@@ -57,9 +57,6 @@ jobs:
       env:
         # Set buildozer to use a temporary directory in the workspace to avoid permission issues
         BUILDOLDER_ROOT: ${{ github.workspace }}/.buildozer
-
-    - name: List build outputs
-      run: ls -la bin/
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
