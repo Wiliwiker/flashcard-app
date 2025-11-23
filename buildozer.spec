@@ -28,10 +28,10 @@ version = 0.1
 # version.filename = %(source.dir)s/main.py
 
 # (str) Presplash image to use at startup
-presplash.filename = %(source.dir)s/assets/presplash.png
+#presplash.filename = %(source.dir)s/assets/presplash.png
 
 # (str) Icon of the application
-icon.filename = %(source.dir)s/assets/icon.png
+#icon.filename = %(source.dir)s/assets/icon.png
 
 # (list) List of application requirements
 # Comma separated e.g. requirements = sqlite3,kivy
