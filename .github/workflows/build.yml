@@ -9,54 +9,95 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+
+    env:
+      ANDROID_HOME: ${{ github.workspace }}/android-sdk
+      ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
+      PATH: ${{ github.workspace }}/android-sdk/platform-tools:${{ github.workspace }}/android-sdk/cmdline-tools/latest/bin:${{ github.workspace }}/.local/bin:${{ github.workspace }}/.buildozer/android/platform/build-arm64-v8a/dists/*/bin:$PATH
 
     steps:
     - uses: actions/checkout@v4
 
+    # -----------------------------
+    # Python
+    # -----------------------------
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
 
-    - name: Install dependencies
+    # -----------------------------
+    # Dependencies
+    # -----------------------------
+    - name: Install system dependencies
       run: |
         sudo apt update
-        sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
+        sudo apt install -y \
+            git zip unzip openjdk-17-jdk autoconf libtool pkg-config \
+            zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev \
+            libssl-dev python3-setuptools python3-pip
+
         pip install --upgrade pip
-        pip install buildozer cython==0.29.33
+        pip install cython==0.29.33 buildozer
         pip install --upgrade python-for-android
 
-    - name: Cache Buildozer dependencies
+    # -----------------------------
+    # Install Android SDK manually
+    # -----------------------------
+    - name: Install Android SDK
+      run: |
+        mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
+        cd $ANDROID_SDK_ROOT
+
+        wget https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O sdk.zip
+        unzip sdk.zip -d cmdline-tools
+        mv cmdline-tools/cmdline-tools cmdline-tools/latest
+
+        yes | cmdline-tools/latest/bin/sdkmanager --licenses
+        yes | cmdline-tools/latest/bin/sdkmanager \
+            "platform-tools" \
+            "platforms;android-31" \
+            "build-tools;31.0.0"
+
+    # -----------------------------
+    # Cache Buildozer
+    # -----------------------------
+    - name: Cache Buildozer
       uses: actions/cache@v3
       with:
-        path: |
-          .buildozer
-        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+        path: .buildozer
+        key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
 
+    # -----------------------------
+    # Build APK
+    # -----------------------------
     - name: Build with Buildozer
       run: |
         buildozer -v android debug 2>&1 | tee build.log
-    
-    - name: Check for errors
+
+    # -----------------------------
+    # Inspect output
+    # -----------------------------
+    - name: Check build results
       if: always()
       run: |
-        echo "=== Checking build directory ==="
-        ls -la
-        echo "=== Checking bin directory ==="
-        ls -la bin/ || echo "No bin directory"
-        echo "=== Finding APK files ==="
+        echo "--- Find APK files ---"
         find . -name "*.apk" -type f
-        echo "=== Buildozer directory structure ==="
-        ls -la .buildozer/android/platform/build-armeabi-v7a/dists/flashcardapp/ || echo "Dist directory not found"
-    
-    - name: Copy APK to bin
+
+    # -----------------------------
+    # Copy APK to /bin
+    # -----------------------------
+    - name: Extract APK
       if: success()
       run: |
         mkdir -p bin
         find .buildozer -name "*.apk" -exec cp {} bin/ \;
         ls -la bin/
-    
+
+    # -----------------------------
+    # Upload build log
+    # -----------------------------
     - name: Upload build log
       if: always()
       uses: actions/upload-artifact@v4
@@ -64,14 +105,11 @@ jobs:
         name: build-log
         path: build.log
 
+    # -----------------------------
+    # Upload APK artefact
+    # -----------------------------
     - name: Upload APK
       if: success()
-      uses: actions/upload-artifact@v4
-      with:
-        name: flashcard-app
-        path: bin/*.apk
-
-    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: flashcard-app
