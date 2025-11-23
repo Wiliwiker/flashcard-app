@@ -1093,6 +1093,7 @@ class DecksScreen(Screen):
 class FlashcardApp(App):
     def build(self):
         self.title = 'Flashcard Master'
+        self.icon = 'icon.png'
         self.card_manager = FlashCardManager()
         
         sm = ScreenManager()
