@@ -47,6 +47,15 @@ jobs:
         ls -la bin/ || echo "No bin directory"
         echo "=== Finding APK files ==="
         find . -name "*.apk" -type f
+        echo "=== Buildozer directory structure ==="
+        ls -la .buildozer/android/platform/build-armeabi-v7a/dists/flashcardapp/ || echo "Dist directory not found"
+    
+    - name: Copy APK to bin
+      if: success()
+      run: |
+        mkdir -p bin
+        find .buildozer -name "*.apk" -exec cp {} bin/ \;
+        ls -la bin/
     
     - name: Upload build log
       if: always()
@@ -60,9 +69,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: flashcard-app
-        path: |
-          bin/*.apk
-          **/*.apk
+        path: bin/*.apk
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
