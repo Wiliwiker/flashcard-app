@@ -16,6 +16,9 @@ source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json,ttf
 
 
+source.include_patterns = icon.png, adaptive_icon_fg.png, adaptive_icon_bg.png
+
+
 # (str) Application versioning (method 1)
 version = 0.1
 
