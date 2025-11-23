@@ -29,7 +29,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y \
-          zip unzip git openjdk-17-jdk \
+          wget zip unzip git openjdk-17-jdk \
           autoconf automake libtool pkg-config \
           zlib1g-dev libncurses5-dev libncursesw5-dev \
           cmake libffi-dev libssl-dev
@@ -64,21 +64,22 @@ jobs:
       run: |
         buildozer -v android debug 2>&1 | tee build.log
 
-    - name: Extract APK
+    - name: Extract APKs to bin/
       if: success()
       run: |
+        # enable recursive globbing
+        shopt -s globstar nullglob
         mkdir -p bin
-        python3 - <<'EOF'
-import os, shutil
-for root, dirs, files in os.walk("."):
-    for f in files:
-        if f.endswith(".apk"):
-            src = os.path.join(root, f)
-            dst = os.path.join("bin", f)
-            print("Found APK:", src)
-            shutil.copy(src, dst)
-EOF
-        ls -la bin/
+        cnt=0
+        for f in ./**/**/*.apk ./**/*.apk ./*.apk; do
+          # skip if loop sees directory names (shouldn't)
+          if [ -f "$f" ]; then
+            cp -v "$f" bin/
+            cnt=$((cnt+1))
+          fi
+        done
+        echo "Copied $cnt APK(s) to bin/"
+        ls -la bin || true
 
     - name: Upload build log
       uses: actions/upload-artifact@v4
@@ -86,7 +87,7 @@ EOF
         name: build-log
         path: build.log
 
-    - name: Upload APK
+    - name: Upload APK artifact
       if: success()
       uses: actions/upload-artifact@v4
       with:
