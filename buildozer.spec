@@ -1,56 +1,67 @@
 [app]
 
-# App name (shown on device)
+# (str) Title of your application
 title = Flashcard App
 
-# Package name (unique identifier)
+# (str) Package name
 package.name = flashcardapp
-package.domain = com.yourname
 
-# Source code (your main Python file)
+# (str) Package domain (needed for android/ios packaging)
+package.domain = org.test
+
+# (str) Source code where the main.py live
 source.dir = .
-source.include_exts = py,png,jpg,kv,atlas,json
 
-# App version
+# (list) Source files to include (let empty to include all the files)
+source.include_exts = py,png,jpg,kv,atlas
+
+# (str) Application versioning (method 1)
 version = 0.1
 
-# Requirements - Kivy dependencies
-requirements = python3,kivy
+# (list) Application requirements
+# comma separated e.g. requirements = sqlite3,kivy
+requirements = python3,kivy==2.3.0
 
-# Android API settings
-android.permissions = INTERNET,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
-android.api = 31
-android.minapi = 21
-android.ndk = 25b
-android.accept_sdk_license = True
-android.skip_update = False
-
-# App orientation
+# (str) Supported orientation (landscape, portrait or all)
 orientation = portrait
 
-# Full screen mode
+# (bool) Indicate if the application should be fullscreen or not
 fullscreen = 0
 
-# Icons and splash (add these files to your project)
-#icon.filename = %(source.dir)s/icon.png
-#presplash.filename = %(source.dir)s/presplash.png
+# (list) Permissions
+android.permissions = INTERNET
 
-# Android architecture
+# (int) Target Android API, should be as high as possible.
+android.api = 27
+
+# (int) Minimum API your APK will support.
+android.minapi = 21
+
+# (str) Android NDK version to use
+android.ndk = 25b
+
+# (bool) Use --private data storage (True) or --dir public storage (False)
+android.private_storage = True
+
+# (str) Android logcat filters to use
+android.logcat_filters = *:S python:D
+
+# (list) The Android archs to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
 android.archs = armeabi-v7a
 
-# App metadata
-android.meta_data = com.samsung.android.sdk.multiwindow.enable=true
+# (bool) enables Android auto backup feature (Android API >=23)
+android.allow_backup = True
+
+# (bool) If True, then skip trying to update the Android sdk
+android.skip_update = False
+
+# (bool) If True, then automatically accept SDK license
+android.accept_sdk_license = True
 
 [buildozer]
 
-# Build directory
-build_dir = ./.buildozer
-
-# Binary directory  
-bin_dir = ./bin
-
-# Log level (2 = full debug output)
+# (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
 log_level = 2
 
-# Display warning if buildozer is run as root
+# (int) Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1
