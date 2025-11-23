@@ -64,7 +64,7 @@ jobs:
 
     - name: Build with Buildozer
       run: |
-        # Use Java 17 here as well
+        # Use Java 17 and include Android SDK in PATH
         export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
         export PATH=$JAVA_HOME/bin:$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
         buildozer -v android debug 2>&1 | tee build.log
@@ -72,11 +72,12 @@ jobs:
     - name: Extract APKs to bin/
       if: success()
       run: |
-        shopt -s globstar nullglob
         mkdir -p bin
+        shopt -s globstar nullglob
         cnt=0
         for f in ./**/**/*.apk ./**/*.apk ./*.apk; do
-          if [ -f "$f" ]; then
+          # Skip files already in bin/
+          if [ -f "$f" ] && [[ "$f" != bin/* ]]; then
             cp -v "$f" bin/
             cnt=$((cnt+1))
           fi
