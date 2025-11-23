@@ -39,6 +39,10 @@ jobs:
 
     - name: Install Android SDK
       run: |
+        # Use Java 17 explicitly
+        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+        export PATH=$JAVA_HOME/bin:$PATH
+
         mkdir -p "$ANDROID_SDK_ROOT/cmdline-tools"
         cd "$ANDROID_SDK_ROOT"
 
@@ -47,7 +51,6 @@ jobs:
         mv cmdline-tools/cmdline-tools cmdline-tools/latest
 
         yes | cmdline-tools/latest/bin/sdkmanager --licenses
-
         yes | cmdline-tools/latest/bin/sdkmanager \
             "platform-tools" \
             "platforms;android-31" \
@@ -61,7 +64,9 @@ jobs:
 
     - name: Build with Buildozer
       run: |
-        export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+        # Use Java 17 here as well
+        export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+        export PATH=$JAVA_HOME/bin:$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
         buildozer -v android debug 2>&1 | tee build.log
 
     - name: Extract APKs to bin/
