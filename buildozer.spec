@@ -1,4 +1,5 @@
 [app]
+
 # (str) Title of your application
 title = Flashcard App
 
@@ -12,7 +13,7 @@ package.domain = org.test
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,jpeg,kv,atlas,json,ttf
+source.include_exts = py,png,jpg,kv,atlas,json,ttf
 
 # (list) Source files to exclude (let empty to not exclude anything)
 # source.exclude_exts = spec
@@ -23,21 +24,16 @@ source.include_exts = py,png,jpg,jpeg,kv,atlas,json,ttf
 # (str) Application versioning (method 1)
 version = 0.1
 
-# (str) Application versioning (method 2)
-# version.regex = __version__ = ['"](.*)['"]
-# version.filename = %(source.dir)s/main.py
-
-# (str) Presplash image to use at startup
-#presplash.filename = %(source.dir)s/assets/presplash.png
+# (str) Presplash of the application
+# presplash.filename = %(source.dir)s/presplash.png
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/assets/icon.png
+# icon.filename = %(source.dir)s/icon.png
 
 # (list) List of application requirements
-# Comma separated e.g. requirements = sqlite3,kivy
-requirements = python3, kivy==2.3.0
+requirements = python3,kivy==2.3.0,android
 
-# (str) Supported orientation (landscape, portrait, or all)
+# (str) Supported orientation (landscape, portrait or all)
 orientation = portrait
 
 # (bool) Indicate if the application should be fullscreen or not
@@ -47,17 +43,13 @@ fullscreen = 0
 android.permissions = INTERNET
 
 # (int) Target Android API, should be as high as possible.
-# Updated to a more modern API level for better compatibility [citation:1].
-android.api = 34
+android.api = 31
 
 # (int) Minimum API your APK will support.
 android.minapi = 21
 
 # (str) Android NDK version to use
-android.ndk = 25b
-
-# (str) Path to the Android NDK, uncomment and set if needed
-# android.ndk_path = /path/to/ndk
+android.ndk = 23b
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 android.private_storage = True
@@ -65,22 +57,37 @@ android.private_storage = True
 # (str) Android logcat filters to use
 android.logcat_filters = *:S python:D
 
-# (list) The Android archs to build for
-# In a real-world scenario, you would likely add arm64-v8a
-android.archs = armeabi-v7a
+# (list) List of Android archs to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
+# For CI builds, stick to one architecture to save time and memory
+android.arch = armeabi-v7a
 
-# (bool) Enable Android auto backup feature (Android API >=23)
-android.allow_backup = True
+# (bool) Enable Android X (Android Jetpack) support
+android.enable_androidx = True
 
 # (bool) If True, then skip trying to update the Android SDK
+# This can help with CI stability
 android.skip_update = False
 
 # (bool) If True, then automatically accept SDK license
 android.accept_sdk_license = True
 
-#
-# Buildozer configuration
-#
+# (int) Android SDK version to use
+android.sdk = 21
+
+# (str) Android NDK directory (if empty, it will be automatically downloaded.)
+# android.ndk_path =
+
+# (str) Android SDK directory (if empty, it will be automatically downloaded.)
+# android.sdk_path =
+
+# (str) Python-for-Android p4a source to use
+# p4a.source =
+
+# (str) Python-for-Android branch to use
+# p4a.branch = master
+
+# (str) OSX SDK version to use
+# osx.sdk_version =
 
 [buildozer]
 
@@ -90,9 +97,11 @@ log_level = 2
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1
 
-# (str) Path to build artifact storage and the default build command
-# buildozer will create a 'bin' directory here to store the generated packages.
-# build_dir = /path/to/build/folder
+# (str) Path to build artifact storage, absolute or relative to spec file
+# build_dir = .buildozer
 
 # (str) Path to build output (i.e. .apk, .aab files) storage
-# bin_dir = /path/to/bin/folder
+# bin_dir = bin
+
+# (str) Buildozer cache directory for dependencies
+# buildozer.cache_dir = .buildozer/cache
