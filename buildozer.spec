@@ -89,12 +89,12 @@ warn_on_root = 1
 
 
 # (str) Icon of the application
-icon.filename = %(source.dir)s/images/icon.png
+icon.filename = images/icon.png
 
 # (str) Adaptive icon of the application (used if Android API level is 26+ at runtime)
-icon.adaptive_foreground.filename = %(source.dir)s/images/adaptive_icon_fg.png
-icon.adaptive_background.filename = %(source.dir)s/images/adaptive_icon_bg.png
+icon.adaptive_foreground.filename = images/adaptive_icon_fg.png
+icon.adaptive_background.filename = images/adaptive_icon_bg.png
 
 
 # (str) Presplash
-presplash.filename = %(source.dir)s/images/icon.png
+presplash.filename = images/icon.png
