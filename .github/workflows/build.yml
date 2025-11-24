@@ -24,7 +24,7 @@ jobs:
 
           python-version: 3.11
 
-          buildozer-cmd: buildozer -v android clean && buildozer -v android debug
+          buildozer-cmd: buildozer -v android debug
 
 
       - name: Upload artifacts
