@@ -64,7 +64,7 @@ android.logcat_filters = *:S python:D
 
 # (list) List of Android archs to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
 # For CI builds, stick to one architecture to save time and memory
-android.arch = arm64-v8a
+android.archs = arm64-v8a
 
 # (bool) Enable Android X (Android Jetpack) support
 android.enable_androidx = True
