@@ -17,7 +17,7 @@ source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json,ttf
 
 
-source.include_patterns = images/**/*
+source.include_patterns = images/
 
 
 # (str) Application versioning (method 1)
